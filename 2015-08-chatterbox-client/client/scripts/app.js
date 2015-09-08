@@ -39,6 +39,7 @@ App.prototype.fetch = function(url) {
     contentType: 'application/json',
     success: function (data) {
       data = JSON.parse(data);
+      console.dir(data)
       for(var i = 0; i < data.results.length; i++){
         app.addMessage(data.results[i]);
       }

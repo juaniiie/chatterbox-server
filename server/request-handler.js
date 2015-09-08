@@ -41,7 +41,7 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "application/JSON";
+ 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
 
@@ -52,18 +52,22 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  // fs.readFile('../2015-08-chatterbox-client/client/index.html', function(err, html) {
-  //   if(err) {
-  //     throw err;
-  //   }
-  //   response.write(html);
+  
+  
 
-  // });
-
+    
   var urlArr = request.url.split('/');
-
-  if(urlArr[1] === "classes"){
-
+  if(urlArr[1] === ''){
+    headers['Content-Type'] = "text/html";
+    fs.readFile('../2015-08-chatterbox-client/client/index.html', function(err, data) {
+      if(err) {
+        throw err;
+      }
+      console.log(data);
+      response.end(data);
+    });
+  } else if(urlArr[1] === "classes"){
+    headers['Content-Type'] = "application/JSON";
     if(request.method === 'POST') {
       statusCode = 201;
       var str = '';
@@ -76,16 +80,18 @@ var requestHandler = function(request, response) {
     } 
 
     response.writeHead(statusCode, headers);
-    // console.log("Response Returned: ", JSON.stringify({ results: messages.getRecentMessages()}))
-    response.end(JSON.stringify({ results: messages.getRecentMessages()}));
-  } else {
-    statusCode = 404;
+      // console.log("Response Returned: ", JSON.stringify({ results: messages.getRecentMessages()}))
+      response.end(JSON.stringify({ results: messages.getRecentMessages()}));
+      response.end();
+    } else {
+      statusCode = 404;
 
-    response.writeHead(statusCode, headers);
+      response.writeHead(statusCode, headers);
 
-    response.end();
-  }
-};
+      response.end();
+    }
+
+  };
 
 
 
