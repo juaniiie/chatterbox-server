@@ -53,8 +53,6 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   
-  
-
     
   var urlArr = request.url.split('/');
   if(urlArr[1] === ''){
@@ -63,7 +61,6 @@ var requestHandler = function(request, response) {
       if(err) {
         throw err;
       }
-      console.log(data);
       response.end(data);
     });
   } else if(urlArr[1] === "classes"){
@@ -80,9 +77,14 @@ var requestHandler = function(request, response) {
     } 
 
     response.writeHead(statusCode, headers);
-      // console.log("Response Returned: ", JSON.stringify({ results: messages.getRecentMessages()}))
-      response.end(JSON.stringify({ results: messages.getRecentMessages()}));
-      response.end();
+   
+
+    var callback = function(data){
+      response.end(JSON.stringify({ results: data}));
+    }
+    
+    messages.getRecentMessages(callback);
+      
     } else {
       statusCode = 404;
 
@@ -92,7 +94,6 @@ var requestHandler = function(request, response) {
     }
 
   };
-
 
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
