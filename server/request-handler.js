@@ -12,7 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var messages = require('./message-list.js'); 
-
+var fs = require('fs');
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -52,9 +52,18 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
+  // fs.readFile('../2015-08-chatterbox-client/client/index.html', function(err, html) {
+  //   if(err) {
+  //     throw err;
+  //   }
+  //   response.write(html);
+
+  // });
+
   var urlArr = request.url.split('/');
 
-  if(urlArr[urlArr.length-2] === "classes"){ 
+  if(urlArr[1] === "classes"){
+
     if(request.method === 'POST') {
       statusCode = 201;
       var str = '';
@@ -74,7 +83,7 @@ var requestHandler = function(request, response) {
 
     response.writeHead(statusCode, headers);
 
-    response.end("404 Page Not Found");
+    response.end();
   }
 };
 
