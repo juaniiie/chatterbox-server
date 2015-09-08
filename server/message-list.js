@@ -19,15 +19,16 @@ var _id = 0;
 
 var getRecentMessages = function () {
   //TO-DO: Only return the 100 latest
-  return _messageList;
+  returnedList =_messageList.reverse();
+  return returnedList;
 }
 
 var addMessage = function (data) {
+  extendedData = JSON.parse(data);
   _id++
-  data.objectId = _id;
-  data.createdAt = new Date();
-
-  _messageList.push(data);
+  extendedData['objectId'] = _id;
+  extendedData['createdAt'] = new Date();
+  _messageList.push(extendedData);
 }
 
 module.exports.getRecentMessages = getRecentMessages;

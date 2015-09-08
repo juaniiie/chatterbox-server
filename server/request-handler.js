@@ -11,7 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var messages = require('./message-list.js');
+var messages = require('./message-list.js'); 
 
 
 var requestHandler = function(request, response) {
@@ -44,7 +44,6 @@ var requestHandler = function(request, response) {
   headers['Content-Type'] = "application/JSON";
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -53,15 +52,33 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  if(request.url === "/classes/messages"){
+  var urlArr = request.url.split('/');
+
+  if(urlArr[urlArr.length-2] === "classes"){ 
     if(request.method === 'POST') {
-      console.log(request);
-    }
+      statusCode = 201;
+      var str = '';
+      request.on('data', function(chunk) {
+        str += chunk;
+      });
+      request.on('end', function() {
+        messages.addMessage(str);
+      });
+    } 
+
+    response.writeHead(statusCode, headers);
+    // console.log("Response Returned: ", JSON.stringify({ results: messages.getRecentMessages()}))
     response.end(JSON.stringify({ results: messages.getRecentMessages()}));
   } else {
-    response.end("Hello, WORLD!");
+    statusCode = 404;
+
+    response.writeHead(statusCode, headers);
+
+    response.end("404 Page Not Found");
   }
 };
+
+
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that
