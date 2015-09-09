@@ -14,7 +14,10 @@ var getRecentMessages = function (callback) {
 }
 
 var addMessage = function (data) {
-  var extendedData = JSON.parse(data);
+  //***For app.js***
+  var extendedData = data;
+  //***For basic-server.js***
+  // var extendedData = JSON.parse(data);
   var id = Math.floor(Math.random()*1000000000);
   extendedData['objectId'] = id;
   extendedData['createdAt'] = new Date();
